@@ -1,0 +1,11 @@
+# Ignore PHP logs
+*.log
+
+# Ignore local environment files
+config/.env
+
+# Ignore vendor folder if you use Composer
+vendor/
+
+# Ignore OS files
+.DS_Store
