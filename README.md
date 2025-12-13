@@ -6,7 +6,7 @@ Ce projet est une API REST simple en PHP pour gérer les ressources **magasins**
 
 - L’API utilise le format JSON pour les entrées et sorties.
 - Elle permet de gérer les magasins avec un CRUD complet :
-  - `GET /getAll` → Récupérer tous les magasins
+  - `GET /stores` → Récupérer tous les magasins
   - `GET /store?id={id}` → Récupérer un magasin par ID
   - `POST /store` → Créer un magasin
   - `PUT /store?id={id}` → Mettre à jour un magasin
@@ -23,8 +23,7 @@ Ce projet est une API REST simple en PHP pour gérer les ressources **magasins**
 
 - PHP 8.2+
 - MySQL ou MariaDB
-- Composer (optionnel, pour des packages futurs)
-- Serveur web local (le serveur intégré de PHP est recommandé)
+- Serveur web local (le serveur intégré de PHP)
 
 ---
 

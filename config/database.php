@@ -6,7 +6,6 @@ class Database {
     private $password = '';
     private $conn;
 
-    // Méthode pour obtenir la connexion
     public function connect() {
         $this->conn = null;
 
@@ -16,10 +15,8 @@ class Database {
                 $this->username,
                 $this->password
             );
-            // Configurer PDO pour lancer des exceptions en cas d'erreur
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            // En cas d'erreur, retourner un message JSON et stopper le script
             echo json_encode(['error' => 'Connection Error: ' . $e->getMessage()]);
             exit;
         }

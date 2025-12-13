@@ -11,13 +11,13 @@ class User {
         $db = new \Database();
         $this->conn = $db->connect();
 
-        // Démarrer la session si nécessaire
+        // Start new session 
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
     }
 
-    // Créer un nouvel utilisateur
+    // Create new user
     public function register($username, $password) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->conn->prepare("INSERT INTO {$this->table} (username, password) VALUES (:username, :password)");
@@ -46,12 +46,12 @@ class User {
         session_destroy();
     }
 
-    // Vérifie si l'utilisateur est connecté
+    // check if user is connected
     public function check() {
         return isset($_SESSION['user_id']);
     }
 
-    // Récupérer l'utilisateur par ID
+    // Get user by id
     public function getById($id) {
         $stmt = $this->conn->prepare("SELECT id, username FROM {$this->table} WHERE id = :id");
         $stmt->bindParam(':id', $id);
