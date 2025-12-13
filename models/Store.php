@@ -6,56 +6,43 @@ class Store {
     private $table = 'stores';
 
     public function __construct() {
-        // Initialize database connection
         $database = new Database();
         $this->conn = $database->connect();
     }
 
-    // Retrieve all stores with optional filters and sorting
-    public function getAll($filters = [], $sort = null) {
-        $query = "SELECT * FROM " . $this->table;
-        $params = [];
-
-        // Filtering
-        if (!empty($filters)) {
-            $filterClauses = [];
-            foreach ($filters as $key => $value) {
-                $filterClauses[] = "$key = :$key";
-                $params[$key] = $value;
-            }
-            $query .= " WHERE " . implode(' AND ', $filterClauses);
-        }
-
-        // Sorting (ensure column is allowed to prevent SQL injection)
-        $allowedSortColumns = ['id', 'name', 'city', 'created_at'];
-        if ($sort && in_array($sort, $allowedSortColumns)) {
-            $query .= " ORDER BY " . $sort;
-        }
-
-        $stmt = $this->conn->prepare($query);
-
-        // Bind parameters to prevent SQL injection
-        foreach ($params as $key => $value) {
-            $stmt->bindValue(":$key", $value);
-        }
-
-        $stmt->execute();
+    public function getAll() {
+        $stmt = $this->conn->query("SELECT * FROM {$this->table}");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Create a new store
+    public function get($id) {
+        $stmt = $this->conn->prepare("SELECT * FROM {$this->table} WHERE id = :id");
+        $stmt->execute(['id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function create($data) {
-        $query = "INSERT INTO " . $this->table . " (name, address, city) VALUES (:name, :address, :city)";
-        $stmt = $this->conn->prepare($query);
-
-        // Bind parameters to prevent SQL injection
-        $stmt->bindParam(':name', $data['name']);
-        $stmt->bindParam(':address', $data['address']);
-        $stmt->bindParam(':city', $data['city']);
-        
-        $stmt->execute();
-
-        // Return the ID of the newly created store
+        $stmt = $this->conn->prepare("INSERT INTO {$this->table} (name, address, city) VALUES (:name, :address, :city)");
+        $stmt->execute([
+            'name' => $data['name'],
+            'address' => $data['address'],
+            'city' => $data['city']
+        ]);
         return $this->conn->lastInsertId();
+    }
+
+    public function update($id, $data) {
+        $stmt = $this->conn->prepare("UPDATE {$this->table} SET name = :name, address = :address, city = :city WHERE id = :id");
+        return $stmt->execute([
+            'id' => $id,
+            'name' => $data['name'],
+            'address' => $data['address'],
+            'city' => $data['city']
+        ]);
+    }
+
+    public function delete($id) {
+        $stmt = $this->conn->prepare("DELETE FROM {$this->table} WHERE id = :id");
+        return $stmt->execute(['id' => $id]);
     }
 }
